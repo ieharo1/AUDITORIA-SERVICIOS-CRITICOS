@@ -1,64 +1,58 @@
-# 🌐 Applet1
+﻿# Auditoria de Servicios Criticos - Documentacion Operativa
 
-Proyecto HTML para crear un applet básico desarrollado por **Isaac Esteban Haro Torres**.
+Script principal: `critical-services-audit.ps1`
 
----
+## Objetivo
+Verificar estado de servicios criticos de Windows, intentar auto-recuperacion, registrar evento y notificar si no se logra levantar.
 
-## 📝 Descripción
+## Funcionamiento
+1. Valida disponibilidad de `Get-Service`.
+2. Recorre servicios configurados en `CriticalServices`.
+3. Si un servicio esta detenido:
+   - intenta `Start-Service`
+   - revalida estado
+   - registra evento en `Application` log
+4. Si falla la recuperacion, envía alerta SMTP y Telegram.
+5. Guarda log diario estructurado.
 
-Página HTML que contiene un applet básico para demostrar funcionalidades simples.
+## Prerequisitos
+- Windows Server 2019/2022
+- PowerShell 5.1+
+- Permisos para iniciar servicios
+- Permisos para escribir en Event Log
 
----
+## Configuracion
+- `CriticalServices` (ejemplo: `Spooler`, `W32Time`, `LanmanServer`)
+- `EventLog.Name` y `EventLog.Source`
+- `Notification.Mail.*`
+- `Notification.Telegram.*`
 
-## ✨ Características
+## Variables de entorno
+- `AUTOMATION_SMTP_PASSWORD`
+- `AUTOMATION_TELEGRAM_BOT_TOKEN`
+- `AUTOMATION_TELEGRAM_CHAT_ID`
 
-- Creación de applets simples
-- Integración con HTML
-- Demostración básica
+## Como ejecutar
 
----
-
-## 🛠️ Stack Tecnológico
-
-- HTML
-- Java Applet
-
----
-
-## 👨‍💻 Desarrollado por Isaac Esteban Haro Torres
-
-**Ingeniero en Sistemas · Full Stack · Automatización · Data**
-
-- 📧 Email: zackharo1@gmail.com
-- 📱 WhatsApp: 098805517
-- 💻 GitHub: https://github.com/ieharo1
-- 🌐 Portafolio: https://ieharo1.github.io/portafolio-isaac.haro/
-
----
-
-## 📄 Licencia
-
-© 2026 Isaac Esteban Haro Torres - Todos los derechos reservados.
-
-## Uso del script de automatización
-
-Este repositorio incluye el script empresarial: $scriptName.
-
-1. Abre PowerShell como administrador.
-2. Configura la sección CONFIG del script según tu entorno.
-3. Define credenciales seguras mediante variables de entorno:
-   - AUTOMATION_SQL_PASSWORD
-   - AUTOMATION_SMTP_PASSWORD
-   - AUTOMATION_TELEGRAM_BOT_TOKEN
-   - AUTOMATION_TELEGRAM_CHAT_ID
-4. Ejecuta:
-
-`powershell
+```powershell
+cd C:\Users\Nabetse\Downloads\server\Applet1
 .\critical-services-audit.ps1
-`
+```
 
-El script generará logs diarios estructurados y enviará notificaciones ante alertas o errores.
+## Programacion recomendada
+- Trigger: cada 5 o 10 minutos
+- Ejecutar con privilegios altos
+- Cuenta con permisos sobre servicios criticos
 
+## Resultado esperado
+- Sin fallos: mensaje de estado OK
+- Con servicio caido y recuperado: evento de recuperacion
+- Con servicio no recuperado: alerta inmediata
+
+## Seguridad
+- Evitar cuenta Domain Admin
+- Usar cuenta de servicio local dedicada
+- Proteger variables de entorno sensibles
 ---
 ## ‍ Desarrollado por Isaac Esteban Haro Torres
 **Ingeniero en Sistemas · Full Stack · Automatización · Data**
