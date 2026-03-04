@@ -1,4 +1,4 @@
-﻿# Auditoria de Servicios Criticos - Documentacion Operativa
+﻿# Auditoria de Servicios Criticos
 
 Script principal: `critical-services-audit.ps1`
 
